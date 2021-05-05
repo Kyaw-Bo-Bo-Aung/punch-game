@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bag Punch Game</title>
+	<style type="text/css">
+		body{
+			background: url('background.jpg') no-repeat center;
+			background-color: rgba(8, 8, 8, .9);
+		}
+		#bag{
+			width: 200px;
+			height: 500px;
+			margin: 10px auto;
+			background: url('bag.png') no-repeat center;
+		}
+		#bag.burst{
+			margin: 10px auto;
+			background: url('bag-burst.png') no-repeat center;
+		}
+		#baghealth {
+			border: 1px solid black;
+			width: 200px;
+			margin: 10px auto;
+		}
+		#baghealthbar{
+			height: 15px;
+			background-color: crimson;
+		}
+		#button{
+			margin: 0px auto;
+			width: 120px;
+		}
+		#count h1{
+			text-align: center;
+		}
+		#result p{
+			color: black;
+			background-color: rgba(244, 244, 244, .7);
+			border: 5px groove red;
+			display: inline-block;
+			position: absolute;
+			top: 40%;
+			left: 50%;
+			transform: translate(-50%);
+			padding: 15px;
+			font-size: 1.4em;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<div id="count">
+			<h1>Number of punch: {{count}}</h1>
+		</div>
+		<div id="result">
+			<p v-if="endgame && count<=25">Woo! You are too strong</p>
+			<p v-else-if="endgame && count<=29">Normal punch!</p>
+			<p v-else-if="endgame && count>31">Train more to get stronger!</p>
+		</div>
+		<div id="bag" :class="{burst: endgame}"></div>
+		<div id="baghealth">
+			<div id="baghealthbar" :style="{ width: health + '%' }"></div>
+		</div>
+		<div id="button">
+			<button @click="punch" v-show="!endgame">Punch</button>
+			<button @click="restart">Restart</button>
+		</div>
+	</div>
+
+
+<script type="text/javascript" src="vue.min.js"></script>
+<script type="text/javascript">
+
+	new Vue({
+		el: "#app",
+		data: {
+			endgame: false,
+			health: 100,
+			count: 0
+		},
+		methods: {
+			punch(){
+				this.count++
+				this.health -= Math.random()*7;
+				let audio = new Audio('punch.mp3')
+				audio.play()
+			if(this.health <= 7){
+				this.health = 0
+				this.endgame = true
+			}
+			},
+			restart(){
+				this.health = 100
+				this.endgame = false
+				this.count = 0
+			}
+		}
+	})
+
+</script>
+</body>
+</html>
